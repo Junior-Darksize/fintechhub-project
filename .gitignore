@@ -1,13 +1,21 @@
-# Python virtual environment
-venv/
-env/
-.venv/
+# Python
+__pycache__/
+*.pyc
 
-# Environment variables
+# Django
+db.sqlite3
+
+# IDE
+.idea/
+.vscode/
+
+# Env
 .env
-.env.local
+venv/
 
+# Large models
+vosk-model*
 
-# Export files
-*.csv
-messages_log.txt
+# OS
+.DS_Store
+Thumbs.db

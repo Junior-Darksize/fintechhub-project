@@ -1,0 +1,13 @@
+# Python virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+.env.local
+
+
+# Export files
+*.csv
+messages_log.txt

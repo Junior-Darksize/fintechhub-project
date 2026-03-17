@@ -21,10 +21,25 @@ class CardAdmin(admin.ModelAdmin):
         from django.urls import path
         return [path('import-excel/', self.import_excel, name='import_excel')] + super().get_urls()
 
+
+
     def import_excel(self, request):
         if request.method == "POST":
-            success, errors = import_cards(request.FILES.get('excel_file'))
-            messages.success(request, f"{success} ta karta saqlandi.")
-            if errors: messages.error(request, f"Xatolar: {', '.join(errors)}")
+            excel_file = request.FILES.get('excel_file')
+            if not excel_file:
+                messages.error(request, "Iltimos, faylni tanlang.")
+                return redirect(".")
+
+            success, errors = import_cards(excel_file)
+            
+            if success > 0:
+                messages.success(request, f"{success} ta karta muvaffaqiyatli saqlandi.")
+            
+            if errors:
+                for error in errors[:10]:
+                    messages.error(request, error)
+                if len(errors) > 10:
+                    messages.warning(request, f"Yana {len(errors)-10} ta xato bor...")
+            
             return redirect("..")
         return render(request, "admin/cards/import_excel.html")

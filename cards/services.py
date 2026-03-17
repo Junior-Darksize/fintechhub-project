@@ -1,7 +1,9 @@
 import csv, logging
 from openpyxl import load_workbook
 from .models import Card
-from . import utils
+from . import utils 
+from .utils import format_card, format_expire, format_phone, format_balance
+
 
 logger = logging.getLogger(__name__)
 
@@ -39,30 +41,74 @@ def export_cards(filters=None, output_file='cards_export.csv'):
 
 
 
-def import_cards(excel_file):
-    wb = load_workbook(excel_file, data_only=True)
-    rows = list(wb.active.iter_rows(min_row=2, values_only=True))
-    success, errors = 0, []
+def import_cards(file):
+    if not file:
+        return 0, ["Fayl tanlanmagan"]
+    
+    try:
+        wb = load_workbook(file, data_only=True)
+        sheet = wb.active
+        success_count = 0
+        errors = []
 
-    for idx, row in enumerate(rows, 2):
-        try:
-            num = utils.format_card(row[0])
-            if not num: raise ValueError("Karta raqami xato")
+
+        STATUS_MAP = {
+            'active': 'active',
+            'aktiv': 'active',
+            'faol': 'active',
+            'inactive': 'inactive',
+            'noaktiv': 'inactive',
+            'faol emas': 'inactive',
+            'expired': 'expired',
+            'muddati o\'tgan': 'expired',
+            'bloklangan': 'inactive'
+        }
+
+
+        rows = sheet.iter_rows(min_row=2, values_only=True)
+
+        for row_idx, row in enumerate(rows, start=2):
+            raw_card = row[0]
             
-            Card.objects.update_or_create(
-                card_number=num,
-                defaults={
-                    'expire': utils.format_expire(row[1]),
-                    'phone': utils.format_phone(row[2]),
-                    'status': row[3] if row[3] in ['active', 'inactive', 'expired'] else 'active',
-                    'balance': utils.format_balance(row[4])
-                }
-            )
-            success += 1
-        except Exception as e:
-            errors.append(f"Qator {idx}: {str(e)}")
+
+            if not raw_card or "card" in str(raw_card).lower():
+                continue
+
+
+            num = format_card(raw_card)
+            expire = format_expire(row[1])
+            phone = format_phone(row[2])
             
-    return success, errors[:5]
+
+            raw_status = str(row[3]).lower().strip() if row[3] else 'active'
+            current_status = STATUS_MAP.get(raw_status, 'active')
+            
+            balance = format_balance(row[4])
+
+
+            if not num:
+                errors.append(f"{row_idx}-qatorda karta raqami xato (16 raqam yoki Luhn): {raw_card}")
+                continue
+
+            try:
+                Card.objects.update_or_create(
+                    card_number=num,
+                    defaults={
+                        'expire': expire,
+                        'phone': phone,
+                        'balance': balance,
+                        'status': current_status 
+                    }
+                )
+                success_count += 1
+            except Exception as e:
+                errors.append(f"{row_idx}-qatorda bazaga saqlashda xato: {str(e)}")
+
+        return success_count, errors
+
+    except Exception as e:
+        return 0, [f"Excel o'qishda jiddiy xato: {str(e)}"]
+
 
 
 

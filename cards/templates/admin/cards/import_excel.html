@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div style="margin: 20px;">
+    <h2>📥 Excel Import</h2>
+    <form method="post" enctype="multipart/form-data" style="margin: 20px 0;">
+        {% csrf_token %}
+        <input type="file" name="excel_file" accept=".xlsx, .xls" required>
+        <button type="submit" style="margin-top: 10px; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Import</button>
+    </form>
+    <a href="../" style="color: #007bff;">← Orqaga</a>
+</div>
+{% endblock %}

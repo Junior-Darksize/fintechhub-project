@@ -1,40 +1,44 @@
 import re
+from stdnum import luhn
 from decimal import Decimal
+import requests
 
 def _clean_digits(value):
     return re.sub(r'\D', '', str(value)) if value else ""
 
-
-
-# LUHN algoritmi uchun tekshirish
 def format_card(raw_card):
     cleaned = _clean_digits(raw_card)
-    return cleaned if len(cleaned) == 16 else None
-
-
+    if len(cleaned) != 16:
+        return None
+    # if not luhn.is_valid(cleaned):
+    #     return None
+    return cleaned
 
 def format_phone(raw_phone):
     cleaned = _clean_digits(raw_phone)
-    return cleaned[-9:] if len(cleaned) >= 9 else (cleaned if cleaned else None)
-
-
+    if not cleaned: return None
+    return cleaned[-9:] if len(cleaned) >= 9 else cleaned
 
 def format_expire(raw_expire):
     if not raw_expire: return None
-    parts = re.split(r'[-./]', str(raw_expire).strip())
-    if len(parts) != 2: return str(raw_expire)
+    raw_expire = str(raw_expire).strip()
+    parts = re.split(r'[-./]', raw_expire)
+    if len(parts) != 2: return raw_expire
     
-
     p1, p2 = parts[0].zfill(2), parts[1].zfill(2)
-    return f"{p2}/{p1[-2:]}" if len(p1) == 4 else f"{p1}/{p2[-2:]}"
+    return f"{p1}/{p2[-2:]}" if len(p1) == 2 else f"{p2}/{p1[-2:]}"
 
 
 
 def format_balance(raw_balance):
+    if raw_balance is None: return Decimal('0.00')
     try:
-        return Decimal(re.sub(r'[^\d.]', '', str(raw_balance)))
+        clean_val = re.sub(r'[^\d.]', '', str(raw_balance))
+        return Decimal(clean_val) if clean_val else Decimal('0.00')
     except:
         return Decimal('0.00')
+
+
 
 
 
@@ -45,6 +49,20 @@ def card_mask(card_number):
 
 def phone_mask(phone):
     return f"+998 ** *** {phone[-4:]}" if phone else "Noma'lum"
+
+
+
+
+
+def send_telegram_message(chat_id, token, text):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        response = requests.post(url, data={'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'})
+        return response.json()
+    except Exception as e:
+        print(f"Telegram error: {e}")
+        return None
+
 
 
 def prepare_message(card, lang="UZ"):

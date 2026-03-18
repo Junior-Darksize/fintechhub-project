@@ -9,5 +9,14 @@ env/
 
 
 # Export files
+*.xlsx
 *.csv
-messages_log.txt
+
+# SQL files
+*.sql
+
+# Database files
+db.sqlite3
+*.xlsx
+__pycache__/
+*.pyc

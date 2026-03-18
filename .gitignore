@@ -9,5 +9,8 @@ env/
 
 
 # Export files
+*.xlsx
 *.csv
-messages_log.txt
+
+# SQL files
+*.sql

@@ -1,6 +1,7 @@
 import re
 from stdnum import luhn
 from decimal import Decimal
+import requests
 
 def _clean_digits(value):
     return re.sub(r'\D', '', str(value)) if value else ""
@@ -48,6 +49,20 @@ def card_mask(card_number):
 
 def phone_mask(phone):
     return f"+998 ** *** {phone[-4:]}" if phone else "Noma'lum"
+
+
+
+
+
+def send_telegram_message(chat_id, token, text):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        response = requests.post(url, data={'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'})
+        return response.json()
+    except Exception as e:
+        print(f"Telegram error: {e}")
+        return None
+
 
 
 def prepare_message(card, lang="UZ"):

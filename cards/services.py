@@ -54,14 +54,11 @@ def import_cards(file):
 
         STATUS_MAP = {
             'active': 'active',
-            'aktiv': 'active',
             'faol': 'active',
             'inactive': 'inactive',
-            'noaktiv': 'inactive',
             'faol emas': 'inactive',
             'expired': 'expired',
-            'muddati o\'tgan': 'expired',
-            'bloklangan': 'inactive'
+            'muddati otgan': 'expired',
         }
 
 

@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-sv0w=%w9+ynikq)7rfcnjqn@mfy+6jw9^cjaul52maxac76iyz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'cards.User'
+
+ALLOWED_HOSTS = ['192.168.222.146', 'localhost', '127.0.0.1', '*', 'localhost:3000']
 
 
 # Application definition
@@ -105,7 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Asia/Tashkent'
+USE_TZ = True
 
 USE_I18N = True
 

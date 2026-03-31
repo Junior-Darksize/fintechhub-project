@@ -16,7 +16,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import json
+from django.views.decorators.csrf import csrf_exempt
+from jsonrpcserver import dispatch
+from django.http import JsonResponse
+import cards.api.v1.rpc_methods
+
+
+
+
+@csrf_exempt
+def rpc_handler(request):
+    # 1. Metodni ishga tushiramiz
+    raw_response = dispatch(request.body.decode(), context={})
+    
+    # 2. MUHIM: Agarda raw_response string bo'lsa, uni lug'atga aylantiramiz
+    if isinstance(raw_response, str):
+        final_response = json.loads(raw_response)
+    else:
+        final_response = raw_response
+
+    # 3. JsonResponse orqali chiroyli formatda qaytaramiz
+    return JsonResponse(
+        final_response, 
+        safe=False, 
+        json_dumps_params={'indent': 4} # Bu Postmanda chiroyli (ustma-ust) chiqaradi
+    )
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/rpc/', rpc_handler, name='rpc_api'),
 ]

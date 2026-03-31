@@ -2,7 +2,9 @@ import csv, logging
 from openpyxl import load_workbook
 from .models import Card
 from . import utils 
-from .utils import format_card, format_expire, format_phone, format_balance
+from .utils import format_card, format_expire, format_phone, format_balance, get_live_exchange_rate
+from decimal import Decimal, ROUND_HALF_UP
+
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +43,10 @@ def export_cards(filters=None, output_file='cards_export.csv'):
 
 
 
+
+
+logger = logging.getLogger(__name__)
+
 def import_cards(file):
     if not file:
         return 0, ["Fayl tanlanmagan"]
@@ -51,49 +57,48 @@ def import_cards(file):
         success_count = 0
         errors = []
 
-
         STATUS_MAP = {
-            'active': 'active',
-            'faol': 'active',
-            'inactive': 'inactive',
-            'faol emas': 'inactive',
-            'expired': 'expired',
-            'muddati otgan': 'expired',
+            'active': 'active', 'faol': 'active',
+            'inactive': 'inactive', 'faol emas': 'inactive',
+            'expired': 'expired', 'muddati otgan': 'expired',
         }
-
 
         rows = sheet.iter_rows(min_row=2, values_only=True)
 
         for row_idx, row in enumerate(rows, start=2):
             raw_card = row[0]
-            
-
             if not raw_card or "card" in str(raw_card).lower():
                 continue
 
-
+            # 1. Ma'lumotlarni formatlash
             num = format_card(raw_card)
             expire = format_expire(row[1])
             phone = format_phone(row[2])
             
-
             raw_status = str(row[3]).lower().strip() if row[3] else 'active'
             current_status = STATUS_MAP.get(raw_status, 'active')
             
-            balance = format_balance(row[4])
+            # 2. VALYUTA KONVERTATSIYASI
+            # Excelda 5-ustun (index 4) balans, 6-ustun (index 5) valyuta bo'lsin
+            raw_balance = format_balance(row[4])
+            currency = str(row[5]).upper().strip() if len(row) > 5 and row[5] else 'UZS'
 
+            # Kursni olamiz va balansni so'mga aylantiramiz
+            rate = get_live_exchange_rate(currency)
+            balance_in_uzs = (Decimal(str(raw_balance)) * rate).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
             if not num:
-                errors.append(f"{row_idx}-qatorda karta raqami xato (16 raqam yoki Luhn): {raw_card}")
+                errors.append(f"{row_idx}-qatorda karta raqami xato: {raw_card}")
                 continue
 
             try:
+                # 3. Bazaga doim UZS (so'm) bo'lib tushadi
                 Card.objects.update_or_create(
                     card_number=num,
                     defaults={
                         'expire': expire,
                         'phone': phone,
-                        'balance': balance,
+                        'balance': balance_in_uzs, # <--- Mana bu yerda so'mda saqlanadi
                         'status': current_status 
                     }
                 )

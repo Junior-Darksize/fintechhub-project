@@ -7,6 +7,37 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from .models import Card, User, OTP, Transfer, Error
 from .services import import_cards
 from .utils import card_mask, phone_mask, send_telegram_message
+import pandas as pd
+from django.http import HttpResponse
+
+
+
+@admin.action(description="Belgilangan elementlarni Excelga eksport qilish")
+def export_to_excel(modeladmin, request, queryset):
+    # 1. Ma'lumotlarni querysetdan olamiz
+    data = list(queryset.values())
+    
+    # 2. DataFrame yaratamiz
+    df = pd.DataFrame(data)
+    
+    # --- MUHIM QISM: Timezone xatosini tuzatish ---
+    for col in df.columns:
+        # Agar ustun datetime formatida bo'lsa
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            # Timezoneni olib tashlaymiz (Excel tushunadigan formatga keltiramiz)
+            df[col] = df[col].dt.tz_localize(None)
+    # ---------------------------------------------
+
+    # 3. Excel fayl tayyorlash
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={queryset.model._meta.verbose_name_plural}.xlsx'
+    
+    # 4. Excelga yozish
+    df.to_excel(response, index=False, engine='openpyxl')
+    
+    return response
+
+
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
@@ -17,25 +48,25 @@ class CardAdmin(admin.ModelAdmin):
     ]
     list_filter = ['status', 'expire', 'is_sms_enabled', 'created_at']
 
-    # MUHIM: Funksiya nomi ham, baza maydoni ham readonly bo'lishi kerak
-    readonly_fields = ('owner', 'card_number', 'formatted_card', 'expire', 'balance')
+    # owner-ni bu yerdan olib tashladik
+    readonly_fields = ( 'formatted_card', 'expire', 'balance')
 
     fieldsets = (
-        ("Asosiy ma'lumotlar", {
-            'fields': ('status', 'is_sms_enabled', 'blocked_until')
+        ('Asosiy ma\'lumotlar', {
+            'fields': ( 'status', 'is_sms_enabled', 'blocked_until')
         }),
-        ("Faqat o'qish uchun", {
-            # Bu yerda 'formatted_card'ni ishlatsangiz, u chiroyli (yulduzchali) ko'rinadi
-            # 'card_number'ni ishlatsangiz, original raqam ko'rinadi (lekin baribir readonly bo'ladi)
-            'fields': ('owner', 'formatted_card', 'expire', 'balance'),
-            'description': "Bu ma'lumotlarni o'zgartirib bo'lmaydi."
+        ('Faqat o\'qish uchun', {
+            'fields': ('formatted_card', 'expire', 'balance'),
         }),
     )
-    # QIDIRUV: Endi owner orqali phone_number va ism-familiya bo'yicha qidiradi
-    search_fields = [ 'owner__phone_number', 'owner__first_name', 'owner__last_name']
+
+
+    search_fields = ['owner__phone_number', 'owner__first_name', 'owner__last_name']
+    
+    # ... qolgan actionlar va yordamchi funksiyalar (formatted_card va h.k.) ...
     
     change_list_template = "admin/cards/card_change_list.html"
-    actions = ['make_active', 'make_inactive', 'send_to_telegram', 'enable_sms', 'disable_sms']
+    actions = ['make_active', 'make_inactive', 'send_to_telegram', 'enable_sms', 'disable_sms', export_to_excel]
 
     # --- ACTIONLAR ---
 
@@ -102,6 +133,17 @@ class CardAdmin(admin.ModelAdmin):
 
     # --- FORMATLASH FUNKSIYALARI ---
 
+    # admin.py ichida CardAdmin klassiga qo'shing
+    def check_block_status(self, obj):
+        if obj.status == 'deleted':
+            return format_html('<span style="color: #666; text-decoration: line-through;">🗑 O\'chirilgan</span>')
+        
+        # Eskidan bor bo'lgan Ochiq/Bloklangan kodingiz...
+        color = "green" if obj.status == "active" else "red"
+        return format_html('<b style="color: {};">{}</b>', color, obj.get_status_display())
+
+    check_block_status.short_description = "Status"
+
     def formatted_card(self, obj): 
         return card_mask(obj.card_number)
     formatted_card.short_description = "Karta raqami"
@@ -112,9 +154,22 @@ class CardAdmin(admin.ModelAdmin):
         return format_html('<span style="color: gray;">Bog\'lanmagan</span>')
     formatted_phone.short_description = "Telefon"
 
+    from django.utils.html import format_html
+    from django.contrib.humanize.templatetags.humanize import intcomma
+
     def formatted_balance(self, obj):
-        return format_html("<b>{}</b> UZS", intcomma(obj.balance))
+        # Vergul o'rniga bo'shliq ishlatsangiz (4 000 000), yanada o'zbekcha ko'rinadi
+        balance_str = intcomma(int(obj.balance)).replace(',', ' ')
+        
+        return format_html(
+            '<span style="font-family: monospace; font-size: 13px; font-weight: 500; color: #ffffff;">'
+            '{}</span>'
+            '<span style="font-size: 10px; color: #b0b0b0; margin-left: 5px;">UZS</span>',
+            balance_str
+        )
+
     formatted_balance.short_description = "Balans"
+    formatted_balance.admin_order_field = "balance"
 
     def display_blocked_until(self, obj):
         if obj.blocked_until and obj.blocked_until > timezone.now():
@@ -159,19 +214,10 @@ class CardAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'first_name', 'last_name', 'phone_number', 'blocked_until']
-    search_fields = ['username', 'phone_number', 'first_name', 'last_name', 'get_cards']
-    readonly_fields = ['first_name', 'last_name', 'phone_number', 'get_cards']
+    search_fields = ['username', 'phone_number', 'first_name', 'last_name']
+    readonly_fields = ['first_name', 'last_name', 'phone_number']
 
-    def get_cards(self, obj):
-        # Related name orqali kartalarni olamiz
-        cards = obj.cards.all() 
-        if not cards.exists():
-            return "Karta yo'q"
-        
-        # Kartalarni chiroyli qator ko'rinishida qaytaramiz
-        return ", ".join([str(card.card_number) for card in cards])
 
-    get_cards.short_description = 'Kartalari'
 
 
 
@@ -207,7 +253,7 @@ class TransferAdmin(admin.ModelAdmin):
     # Model maydonlari o'rniga biz yaratgan formatlash funksiyalarini qo'yamiz
     list_display = [
         'masked_ext_id', 'masked_sender', 'masked_receiver', 
-        'sending_amount_display', 'currency', 'state', 'created_at' # <--- O'zgartirildi
+        'sending_amount_display',  'state', 'created_at' # <--- O'zgartirildi
     ]
     list_filter = ['state', 'currency', 'created_at']
     
@@ -216,6 +262,8 @@ class TransferAdmin(admin.ModelAdmin):
     
     # Ma'lumotlarni o'zgartirib bo'lmasligi uchun (Read-only)
     readonly_fields = ['ext_id', 'sender_card_number', 'receiver_card_number', 'sending_amount', 'currency', 'state', 'created_at']
+
+    actions = [export_to_excel]
 
     # --- MASKALASH FUNKSIYALARI ---
 
@@ -238,6 +286,24 @@ class TransferAdmin(admin.ModelAdmin):
 
     # Summa o'z holicha qoladi (siz aytgandek)
     def sending_amount_display(self, obj):
-        return format_html("<b>{}</b>", intcomma(obj.sending_amount))
+        # Raqamlarni chiroyli ajratamiz (3 000 000)
+        amount_raw = int(obj.sending_amount)
+        amount_str = intcomma(amount_raw).replace(',', ' ')
+        
+        # Holatga qarab faqat shaffoflikni o'zgartiramiz, rang oqligicha qoladi
+        # Confirmed bo'lsa to'liq oq, Cancelled bo'lsa biroz xira oq
+        op = "1.0" if obj.state == 'Confirmed' else "0.5"
+        
+        return format_html(
+            '<div style="color: #ffffff; opacity: {}; font-family: \'Roboto Mono\', monospace; '
+            'font-size: 13px; font-weight: 600; display: block; width: 100%;">'
+            '{}'
+            '</div>',
+            op, amount_str
+        )
+
     sending_amount_display.short_description = "Summa"
+    sending_amount_display.admin_order_field = "sending_amount"
+
+
 

@@ -163,6 +163,12 @@ class Command(BaseCommand):
                 "uz": "Foydalanuvchi bloklangan. Blokdan chiqishga qolgan vaqt:",
                 "ru": "Пользователь заблокирован. Время до разблокировки:",
                 "en": "The user is blocked. Time remaining until unlock:"
+            },
+            {
+                "code": 32726,
+                "uz": "Telefon raqami  noto'g'ri",
+                "ru": "Неверный  номера телефона",
+                "en": "Invalid phone number "
             }
         ]
 

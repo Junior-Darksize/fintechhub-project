@@ -12,6 +12,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=150, verbose_name="Ism")
     last_name = models.CharField(max_length=150, verbose_name="Familiya")
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    lang = models.CharField(max_length=2, default='uz', choices=[('uz', 'Uzbek'), ('ru', 'Russian'), ('en', 'English')])
     blocked_until = models.DateTimeField(null=True, blank=True, verbose_name="Bloklangan vaqti")
 
     # Migratsiya xatosini yechish uchun related_name qo'shamiz
@@ -188,3 +189,4 @@ class Error(models.Model):
     
     def get_message(self, lang='uz'):
         return getattr(self, lang, self.uz)
+    

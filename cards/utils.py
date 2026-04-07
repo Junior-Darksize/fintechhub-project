@@ -146,7 +146,6 @@ def get_card_type(card_number):
 
 
 
-
 def get_rpc_error(code, lang='uz', extra_msg=None):
     from .models import Error as ErrorModel
     err = ErrorModel.objects.filter(code=code).first()
@@ -159,7 +158,7 @@ def get_rpc_error(code, lang='uz', extra_msg=None):
     if extra_msg:
         message = f"{message} {extra_msg}"
 
-    # ENDI: To'g'ridan-to'g'ri jsonrpcserver xato ob'ektini qaytaramiz
+    # FAQAT ob'ektni qaytaramiz (raise emas!)
     return Error(code=code, message=message)
 
 

@@ -14,9 +14,27 @@ env/
 
 # SQL files
 *.sql
+db.sqlite3-journal
 
 # Database files
 db.sqlite3
 *.xlsx
 __pycache__/
 *.pyc
+
+
+# Python keshlari
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# Loglar
+*.log
+fintech_audit.log
+
+
+# Media va Static fayllar (agar rasmlar yuklansa)
+media/
+staticfiles/

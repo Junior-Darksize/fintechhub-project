@@ -20,13 +20,14 @@ import logging
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from cards.models import Error  
+import os
 
 
 
 
 # Telegram Bot sozlamalari
-TG_TOKEN = "8448513005:AAFCmG5C9a2_3Tbh_bDzoXThUfotsTUlx0E"
-TG_CHAT_ID = 1078739901
+TG_TOKEN = os.getenv("TG_TOKEN")
+TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
 
 
@@ -39,12 +40,16 @@ logger = logging.getLogger('fintech_audit')
 def card_info(context, **params):
     """
     Karta haqidagi to'liq ma'lumotlarni qaytaruvchi RPC metod.
-    
-    Mantiq:
-    1. Karta raqamini keshdan qidiradi (Redis).
-    2. Keshda yo'q bo'lsa, bazadan oladi (PostgreSQL) va 30 soniyaga keshga saqlaydi.
-    3. Karta BIN kodiga qarab turini (Humo, Uzcard, Visa, Mastercard) aniqlaydi.
-    4. Karta raqamini maskalangan holda qaytaradi.
+
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): Karta raqami (16 xonali).
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en'). Standarti 'uz'.
+
+    Returns:
+        Success: Karta ma'lumotlari (maskalangan raqam, balans, egasi va boshqalar).
+        Error: Xatolik kodi va tavsifi.
     """
     card_number = params.get("card_number")
     lang = params.get("lang", "uz").lower()
@@ -122,12 +127,17 @@ def user_login(context, **params):
     """
     Foydalanuvchi ma'lumotlarini validatsiya qilish va kirish OTP kodini yuborish.
 
-    Mantiq:
-    1. Kiruvchi ism, familiya va telefon raqami mavjudligini tekshiradi.
-    2. Foydalanuvchini bazadan qidiradi (Ism va familiya harf katta-kichikligiga qaramasdan).
-    3. Foydalanuvchi bloklanganlik holatini tekshiradi.
-    4. 6 xonali OTP yaratib, uni SHA-256 xeshlash orqali bazada xavfsiz saqlaydi.
-    5. Telegram bot orqali kodni yuboradi va maskalangan telefon raqamini qaytaradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - first_name (str): Foydalanuvchi ismi.
+            - last_name (str): Foydalanuvchi familiyasi.
+            - phone (str): Telefon raqami.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en'). Standarti 'uz'.
+
+    Returns:
+        Success: {"status": "otp_sent", "phone": maskalangan telefon raqami}.
+        Error: Xatolik kodi va tavsifi.
     """
     # So'rov parametrlaridan til va foydalanuvchi ma'lumotlarini olish
     lang = params.get("lang", "uz").lower()
@@ -189,13 +199,16 @@ def user_login_confirm(context, **params):
     """
     Foydalanuvchi yuborgan OTP kodini tekshirish va loginni yakunlash.
 
-    Mantiq:
-    1. Telefon raqami va OTP kodini qabul qiladi.
-    2. Foydalanuvchi bloklanmaganligini va mavjudligini tekshiradi.
-    3. Oxirgi faol OTP obyektini bazadan oladi.
-    4. verify_otp() orqali kodning to'g'riligini (hashlangan holda) tekshiradi.
-    5. Xato urinishlar soni 3 tadan oshsa, foydalanuvchini vaqtincha bloklaydi.
-    6. Muvaffaqiyatli bo'lsa, foydalanuvchi ma'lumotlarini qaytaradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - phone (str): Telefon raqami.
+            - otp (str): Foydalanuvchi kiritgan 6 xonali OTP kod.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en'). Standarti 'uz'.
+
+    Returns:
+        Success: {"status": "success", "data": {"full_name": ..., "phone": ...}}.
+        Error: Xatolik kodi va tavsifi.
     """
     # So'rov parametrlarini olish
     lang = params.get("lang", "uz").lower()
@@ -255,12 +268,15 @@ def resend_otp_login(context, **params):
     """
     Login uchun OTP kodini qayta yuborish metodi.
 
-    Mantiq:
-    1. Telefon raqami orqali foydalanuvchini aniqlaydi.
-    2. Bazadagi ushbu foydalanuvchiga tegishli barcha eski, ishlatilmagan 
-       login kodlarini bekor qiladi (is_used=True).
-    3. Yangi 6 xonali kod yaratadi va uni SHA-256 xeshi bilan bazaga saqlaydi.
-    4. Yangi kodni Telegram xabarnoma xizmati orqali yuboradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - phone (str): Telefon raqami.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en'). Standarti 'uz'.
+
+    Returns:
+        Success: {"status": "otp_resent"}.
+        Error: Xatolik kodi va tavsifi.
     """
     # So'rov parametrlarini olish va telefon raqamini formatlash
     lang = params.get("lang", "uz").lower()
@@ -306,20 +322,15 @@ def card_add_request(context, **params):
     """
     Yangi bank kartasini foydalanuvchi hisobiga bog'lash uchun OTP so'rovi.
 
-    Mantiq:
-    1. Karta raqami va telefon raqami mavjudligini bazadan tekshiradi.
-    2. Karta holati (Active) va allaqachon bog'lanmaganligini filtrlaydi.
-    3. Foydalanuvchi tili (lang) sozlamasini yangilaydi.
-    4. "Card Binding" maqsadi bilan yangi SHA-256 xeshlangan OTP yaratadi.
-    5. Karta raqamini maskalangan holda Telegram xabarnoma xizmatiga yuboradi.
-
     Args:
-        card_number (str): 16 xonali karta raqami.
-        phone (str): Foydalanuvchining tizimdagi telefon raqami.
-        lang (str): Xabarnoma tili (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): 16 xonali karta raqami.
+            - phone (str): Foydalanuvchining tizimdagi telefon raqami.
+            - lang (str, optional): Xabarnoma tili ('uz', 'ru', 'en').
 
     Returns:
-        Success: OTP yuborilganligi holati va amal qilish muddati.
+        Success: {"status": "otp_sent", "card_number": maskalangan raqam, "expires_in": 120}.
         Error: Karta topilmaganda, bloklanganda yoki telefon mos kelmaganda RPC xatosi.
     """
     lang = params.get("lang", "uz").lower()
@@ -411,13 +422,16 @@ def card_add_confirm(context, **params):
     """
     Karta bog'lash so'rovini OTP orqali tasdiqlash va yakunlash.
 
-    Mantiq:
-    1. Karta raqami va OTP kodini qabul qiladi.
-    2. "Card Binding" maqsadi bilan yaratilgan oxirgi ishlatilmagan OTPni qidiradi.
-    3. verify_otp() orqali kodning to'g'riligini (hashlangan variantda) tekshiradi.
-    4. Muvaffaqiyatli bo'lsa, kartaning 'is_sms_enabled' bayrog'ini True ga o'zgartiradi.
-    5. Karta raqamining dastlabki raqamlariga (BIN) qarab uning turini aniqlaydi.
-    6. Foydalanuvchiga maskalangan ma'lumotlar va karta balansini qaytaradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): 16 xonali karta raqami.
+            - otp (str): Foydalanuvchi kiritgan 6 xonali OTP kod.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
+
+    Returns:
+        Success: {"status": "card_added", "data": {...}}.
+        Error: Xatolik kodi va tavsifi.
     """
     # So'rov parametrlarini olish
     lang = params.get("lang", "uz").lower()
@@ -481,18 +495,15 @@ def card_check(context, **params):
     """
     Qabul qiluvchi kartasini tekshirish va ma'lumotlarini olish.
 
-    Mantiq:
-    1. Luhn algoritmi orqali karta raqami matematik xatolardan xoliligini tekshiradi.
-    2. Kartani bazadan qidiradi va uning 'active' holatidaligini ko'radi.
-    3. Karta BIN kodiga qarab (Humo, Uzcard, Visa, etc.) turini aniqlaydi.
-    4. Karta egasining ism-familiyasini xavfsizlik (Data Privacy) uchun maskalaydi.
-
     Args:
-        receiver_card_number (str): Qabul qiluvchining 16 xonali karta raqami.
-        lang (str): Xatoliklar tili.
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - receiver_card_number (str): Qabul qiluvchining 16 xonali karta raqami.
+            - lang (str, optional): Xatoliklar tili ('uz', 'ru', 'en').
 
     Returns:
-        Success: Maskalangan ism, karta turi va tasdiqlanganlik holati.
+        Success: {"receiver_name": ..., "card_type": ..., "status": ...}.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     r_card_num = params.get("receiver_card_number")
@@ -551,7 +562,7 @@ def card_check(context, **params):
 
 
 # Sizning maxfiy kalitingiz
-SECRET_KEY = b'FintechHub_Secure_QR_Key_2026_32' 
+SECRET_KEY = os.getenv("SECRET_KEY").encode('utf-8')  # 32 baytli kalit kerak (AES-256 uchun)
 
 # ----------------------------------------------------------------
 # 0-ETAP: GENERATE QR CODE (Qabul qiluvchi uchun)
@@ -563,20 +574,17 @@ def generate_qr_code(context, **params):
     """
     Qabul qiluvchi uchun shifrlangan QR-kod xeshini yaratish.
 
-    Mantiq:
-    1. Karta raqami va ixtiyoriy ravishda to'lov summasini (amount) qabul qiladi.
-    2. Kartaning bazada mavjudligi va 'active' holatidaligini tekshiradi.
-    3. Ma'lumotlarni (karta, summa, valyuta, vaqt) JSON formatiga yig'adi.
-    4. AES-256 algoritmi va maxfiy kalit (SECRET_KEY) yordamida shifrlaydi.
-    5. Shifrlangan baytlarni Base64 formatiga o'tkazib, tayyor xeshni qaytaradi.
-
     Args:
-        card_number (str): Qabul qiluvchining karta raqami.
-        amount (decimal, optional): Belgilangan to'lov summasi.
-        currency (str): Valyuta kodi (masalan, 860 - UZS).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): Qabul qiluvchining karta raqami.
+            - amount (Decimal, optional): Belgilangan to'lov summasi.
+            - currency (str, optional): Valyuta kodi (masalan, 860 - UZS). Standarti '860'.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: {"hash_data": "..."} - Shifrlangan xesh ma'lumoti.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_num = params.get("card_number")
@@ -634,19 +642,15 @@ def scan_qr_details(context, **params):
     """
     Shifrlangan QR ma'lumotlarini o'qish va to'lov parametrlarini aniqlash.
 
-    Mantiq:
-    1. Base64 formatidagi xeshni dekodlaydi va AES-256 (CBC) orqali parollaydi.
-    2. QR-kodning amal qilish muddatini tekshiradi (3 daqiqalik TTL).
-    3. Qabul qiluvchi kartasini bazadan qidirib, egasining ma'lumotlarini oladi.
-    4. To'lov summasi QR ichida belgilanganligiga qarab limitlarni (min/max) belgilaydi.
-    5. Agar summa belgilangan bo'lsa (Fixed), foydalanuvchi uni o'zgartira olmaydi.
-
     Args:
-        hash_data (str): Generatsiya qilingan shifrlangan QR xeshi.
-        lang (str): Xatoliklar tili.
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - hash_data (str): Generatsiya qilingan shifrlangan QR xeshi.
+            - lang (str, optional): Xatoliklar tili ('uz', 'ru', 'en').
 
     Returns:
         Success: Qabul qiluvchi nomi, karta raqami, summa va limitlar.
+        Error: Xatolik kodi va tavsifi.
     """
     hash_data = params.get("hash_data")
     lang = params.get("lang", "uz").lower()
@@ -715,20 +719,18 @@ def create_qr_transaction(context, **params):
     """
     Valyuta konvertatsiyasi bilan QR-tranzaksiya yaratish.
 
-    Mantiq:
-    1. Kiruvchi ISO raqamli kodlarini (840, 643) harfli kodlarga (USD, RUB) o'giradi.
-    2. Markaziy bank yoki tashqi API'dan joriy valyuta kursini oladi.
-    3. Kiritilgan summani kursga ko'paytirib, so'mdagi (UZS) haqiqiy qiymatni hisoblaydi.
-    4. Jo'natuvchining balansini so'mdagi summa bilan solishtiradi.
-    5. Tranzaksiyani 'created' holatida bazaga saqlaydi va chek ma'lumotlarini qaytaradi.
-
     Args:
-        sender_card_number (str): To'lovchi karta raqami.
-        amount (Decimal): Tanlangan valyutadagi summa.
-        currency (str): ISO valyuta kodi (masalan: 840, 978, 860).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - sender_card_number (str): To'lovchi karta raqami.
+            - receiver_card_number (str): Qabul qiluvchi karta raqami.
+            - amount (Decimal): Tanlangan valyutadagi summa.
+            - currency (str): ISO valyuta kodi (masalan: 840, 978, 860).
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: Tranzaksiya ID, kurs, so'mdagi summa va sana.
+        Error: Xatolik kodi va tavsifi.
     """
     sender_card_num = params.get("sender_card_number")
     receiver_card_num = params.get("receiver_card_number")
@@ -798,12 +800,15 @@ def confirm_qr_transaction(context, **params):
     """
     QR-tranzaksiyani yakunlash va pul mablag'larini o'tkazish.
 
-    Mantiq:
-    1. Tranzaksiya ID orqali 'created' holatidagi transferni topadi va bloklaydi.
-    2. Jo'natuvchi va qabul qiluvchi kartalarini 'select_for_update' orqali bloklaydi (Race condition oldini olish).
-    3. Balansni so'mdagi qiymat bilan oxirgi marta tekshiradi.
-    4. Jo'natuvchidan pulni ayirib, qabul qiluvchiga qo'shadi (Atomic operation).
-    5. Tranzaksiya holatini 'confirmed' ga o'zgartiradi va batafsil chek qaytaradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - transaction_id (int): Transfer (tranzaksiya) IDsi.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
+
+    Returns:
+        Success: {"status": "confirmed", "receipt": {...}}.
+        Error: Xatolik kodi va tavsifi.
     """
     tr_id = params.get("transaction_id")
     lang = params.get("lang", "uz").lower()
@@ -854,8 +859,8 @@ def confirm_qr_transaction(context, **params):
 
 
 # Telegram sozlamalari
-TOKEN = "8448513005:AAFCmG5C9a2_3Tbh_bDzoXThUfotsTUlx0E"
-CHAT_ID = 1078739901
+TOKEN = os.getenv("TG_BOT_TOKEN")   
+CHAT_ID = os.getenv("TG_CHAT_ID")
 # Ushbu metod pul o'tkazmasi so'rovini qabul qiladi, barcha xavfsizlik 
 # filtrlaridan o'tkazadi va tasdiqlash uchun shifrlangan OTP yaratadi.
 @method
@@ -864,12 +869,20 @@ def transfer_create(context, **params):
     """
     Pul o'tkazmasi so'rovini yaratish va validatsiya qilish.
 
-    Mantiq:
-    1. Valyuta turi va karta raqamlarining matematik to'g'riligini (Luhn) tekshiradi.
-    2. Jo'natuvchi va qabul qiluvchi kartalari holatini (Active, Expiry) filtrlaydi.
-    3. Jo'natuvchining balansini joriy valyuta kursi bo'yicha (UZSda) hisoblaydi.
-    4. Xavfsizlik uchun barcha eski 'created' holatdagi tranzaksiyalarni bekor qiladi.
-    5. SHA-256 xeshlangan OTP yaratib, Telegram orqali ko'p tilli xabar yuboradi.
+    Args:
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - ext_id (str): Unikal tashqi ID (ixtiyoriy).
+            - sender_card_number (str): Jo'natuvchi karta raqami.
+            - sender_card_expiry (str): Jo'natuvchi karta muddati (MMYY).
+            - receiver_card_number (str): Qabul qiluvchi karta raqami.
+            - sending_amount (Decimal): O'tkazilayotgan summa.
+            - currency (str): Valyuta kodi ('UZS', 'RUB', 'USD').
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
+
+    Returns:
+        Success: {"ext_id": ..., "state": ..., "otp_sent": True, "expires_in": 120}.
+        Error: Xatolik kodi va tavsifi.
     """
     # 1. Parametrlarni olish va formatlash
     lang = params.get("lang", "uz").lower()
@@ -981,19 +994,16 @@ def transfer_confirm(context, **params):
     """
     OTP kodini tasdiqlash va pul o'tkazmasini yakunlash.
 
-    Mantiq:
-    1. Tranzaksiya va kartalarni 'select_for_update' orqali bloklaydi (Race condition oldini olish).
-    2. Kartaning bloklanmaganligini tekshiradi (Time-based blocking).
-    3. OTP kodining to'g'riligini va amal qilish muddatini (120s) tekshiradi.
-    4. Xato kiritilgan taqdirda urinishlar soniga qarab (5, 15, 30 daqiqa) blok qo'yadi.
-    5. Muvaffaqiyatli o'tkazmadan so'ng balanslarni yangilaydi va Redis keshini (cache.delete) tozalaydi.
-
     Args:
-        ext_id (str): transfer_create'dan qaytgan unikal ID.
-        otp (str): Foydalanuvchi kiritgan 6 xonali tasdiqlash kodi.
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - ext_id (str): transfer_create'dan qaytgan unikal ID.
+            - otp (str): Foydalanuvchi kiritgan 6 xonali tasdiqlash kodi.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: Tranzaksiya holati va batafsil elektron chek.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     ext_id = params.get("ext_id")
@@ -1110,20 +1120,15 @@ def resend_otp(context, **params):
     """
     Tasdiqlash kodini (OTP) qayta yuborish.
 
-    Mantiq:
-    1. Tranzaksiyaning 'created' holatidaligini tekshiradi.
-    2. Urinishlar soni 3 tadan oshgan bo'lsa, kod yuborishni taqiqlaydi (Security Block).
-    3. Eski faol (is_used=False) OTP kodlarini bekor qiladi.
-    4. Yangi 6 xonali kod yaratib, uning SHA-256 xeshini bazada saqlaydi.
-    5. Tranzaksiya vaqtini (`created_at`) yangilab, amal qilish muddatini uzaytiradi.
-    6. Telegram orqali yangi kodni maskalangan ma'lumotlar bilan yuboradi.
-
     Args:
-        ext_id (str): transfer_create'dan qaytgan unikal ID.
-        lang (str): Xabar tili (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - ext_id (str): transfer_create'dan qaytgan unikal ID.
+            - lang (str, optional): Xabar tili ('uz', 'ru', 'en').
 
     Returns:
-        Success: Yangi kod yuborilganligi va amal qilish muddati (120s).
+        Success: {"ext_id": ..., "otp_sent": True, "expires_in": 120}.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     ext_id = params.get("ext_id")
@@ -1195,18 +1200,15 @@ def transfer_cancel(context, **params):
     """
     Tranzaksiyani bekor qilish va mablag'ni qaytarish (Reversal).
 
-    Mantiq:
-    1. Tranzaksiyani 'select_for_update' orqali qulflaydi.
-    2. Agar tranzaksiya allaqachon 'confirmed' bo'lsa, vaqtni tekshiradi (60s limit).
-    3. Refund vaqtida qabul qiluvchining balansida yetarli mablag' borligini tekshiradi.
-    4. Mablag'ni teskari yo'nalishda qaytaradi (Receiver -> Sender).
-    5. Agar tranzaksiya hali 'created' bo'lsa, uni shunchaki bekor qiladi.
-
     Args:
-        ext_id (str): Bekor qilinishi kerak bo'lgan tranzaksiya IDsi.
-    
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - ext_id (str): Bekor qilinishi kerak bo'lgan tranzaksiya IDsi.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
+
     Returns:
         Success: Bekor qilinganlik holati va tizim xabari.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     ext_id = params.get("ext_id")
@@ -1277,23 +1279,16 @@ def check_balance(context, **params):
     """
     Karta balansini tekshirish va karta turini aniqlash.
 
-    Mantiq:
-    1. Karta raqami va amal qilish muddati bo'yicha bazadan qidiradi.
-    2. Topilmasa, 32704 xato kodini (Invalid card/expiry) qaytaradi.
-    3. Karta raqamining boshlang'ich raqamlari orqali brendni aniqlaydi:
-       - 9860 -> HUMO
-       - 8600, 5614, 6262, 5445 -> UZCARD
-       - 4... -> VISA
-       - 51-55... -> MASTERCARD
-    4. Foydalanuvchi tanlagan tilda balans haqida matnli xabar shakllantiradi.
-
     Args:
-        card_number (str): 16 xonali karta raqami.
-        card_expire (str): Karta muddati (MMYY).
-        lang (str): Til kodi (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): 16 xonali karta raqami.
+            - card_expire (str): Karta muddati (MMYY).
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: Karta egasi, turi, balansi va maskalangan karta raqami.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_number = params.get("card_number")
@@ -1352,19 +1347,15 @@ def card_block_request(context, **params):
     """
     Kartani bloklash uchun OTP so'rovini yaratish.
 
-    Mantiq:
-    1. Karta raqami bo'yicha bazadan qidiradi va 'deleted' emasligini tekshiradi.
-    2. Karta holati 'active' bo'lmasa, bloklash so'rovini rad etadi.
-    3. 6 xonali tasdiqlash kodini generatsiya qiladi.
-    4. Kodni SHA-256 orqali xeshlab, OTP modeliga 'BLOCK' maqsadi bilan saqlaydi.
-    5. Ochiq kodni Telegram orqali foydalanuvchiga yuboradi.
-
     Args:
-        card_number (str): Bloklanishi kerak bo'lgan 16 xonali karta raqami.
-        lang (str): Xabar tili (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): Bloklanishi kerak bo'lgan 16 xonali karta raqami.
+            - lang (str, optional): Xabar tili ('uz', 'ru', 'en').
 
     Returns:
         Success: OTP yuborilganligi haqida tasdiq xabari.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_number = params.get("card_number")
@@ -1430,21 +1421,16 @@ def card_block_confirm(context, **params):
     """
     Kartani bloklashni OTP orqali tasdiqlash.
 
-    Mantiq:
-    1. Karta raqami bo'yicha bazadan qidiradi.
-    2. 'Card Block' maqsadi bilan yaratilgan oxirgi ishlatilmagan OTPni topadi.
-    3. OTP kodini xesh orqali tekshiradi (verify_otp).
-    4. Karta statusini 'blocked'ga o'zgartiradi.
-    5. 'blocked_until' maydonini 100 yil kelajakka suradi (Admin panelda qizil chiroq yonishi uchun).
-    6. OTPni ishlatilgan deb belgilaydi va foydalanuvchiga tasdiq xabarini qaytaradi.
-
     Args:
-        card_number (str): 16 xonali karta raqami.
-        otp (str): Foydalanuvchi kiritgan 6 xonali kod.
-        lang (str): Til kodi (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): 16 xonali karta raqami.
+            - otp (str): Foydalanuvchi kiritgan 6 xonali kod.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: Bloklash muvaffaqiyatli yakunlangani haqida xabar.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_number = params.get("card_number")
@@ -1502,20 +1488,15 @@ def card_delete_request(context, **params):
     """
     Kartani o'chirish uchun OTP so'rovini yaratish.
 
-    Mantiq:
-    1. Karta raqami bo'yicha bazadan qidiradi.
-    2. Karta allaqachon 'deleted' holatida bo'lsa, so'rovni rad etadi.
-    3. 6 xonali tasdiqlash kodini yaratadi (Plain text).
-    4. Xavfsizlik uchun kodni SHA-256 orqali xeshlab bazaga saqlaydi (otp_hash).
-    5. Avvalgi barcha faol 'DELETE' maqsadli OTP kodlarini bekor qiladi (cleanup).
-    6. Ochiq kodni Telegram orqali ko'p tilli xabarnoma ko'rinishida yuboradi.
-
     Args:
-        card_number (str): O'chirilishi kerak bo'lgan karta raqami.
-        lang (str): Xabar tili (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): O'chirilishi kerak bo'lgan karta raqami.
+            - lang (str, optional): Xabar tili ('uz', 'ru', 'en').
 
     Returns:
         Success: OTP yuborilganligi haqida xabar.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_number = params.get("card_number")
@@ -1584,20 +1565,16 @@ def card_delete_confirm(context, **params):
     """
     Kartani o'chirishni OTP orqali tasdiqlash.
 
-    Mantiq:
-    1. Bazadan hali o'chirilmagan (exclude status='deleted') kartani qidiradi.
-    2. 'DELETE' maqsadli (purpose) oxirgi faol OTPni topadi.
-    3. OTP kodini xesh (SHA-256) orqali tekshiradi (verify_otp).
-    4. Kartani haqiqatda o'chirmasdan, statusini 'deleted'ga o'zgartiradi (Soft Delete).
-    5. Tranzaksion yaxlitlikni ta'minlash uchun @transaction.atomic ishlatiladi.
-
     Args:
-        card_number (str): 16 xonali karta raqami.
-        otp (str): Foydalanuvchi kiritgan 6 xonali kod.
-        lang (str): Til kodi (uz, ru, en).
+        context (Any): RPC konteksti (foydalanuvchi sessiyasi yoki request ma’lumotlari).
+        params (dict): Quyidagi kalitlarni qabul qiladi:
+            - card_number (str): 16 xonali karta raqami.
+            - otp (str): Foydalanuvchi kiritgan 6 xonali kod.
+            - lang (str, optional): Til kodi ('uz', 'ru', 'en').
 
     Returns:
         Success: Karta o'chirilganligi haqida yakuniy xabar.
+        Error: Xatolik kodi va tavsifi.
     """
     lang = params.get("lang", "uz").lower()
     card_number = params.get("card_number")

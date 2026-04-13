@@ -12,25 +12,51 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "True"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sv0w=%w9+ynikq)7rfcnjqn@mfy+6jw9^cjaul52maxac76iyz'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")  # .env faylida vergul bilan ajratilgan ro'yxat kutiladi
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://api.fintechhub.uz",  # Sizning asosiy domeningiz
+    "https://fintechhub.uz",
+    "http://localhost:3000",      # Faqat ishlab chiqish vaqtida (DEBUG=True bo'lsa)
+]
+
+
+# Faqat ishonchli domenlardan cookie va auth-headerni qabul qilish
+CORS_ALLOW_CREDENTIALS = True
+
+
+# Faqat kerakli metodlarga ruxsat berish
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
 
 APPEND_SLASH = False
 
 AUTH_USER_MODEL = 'cards.User'
 
-ALLOWED_HOSTS = ['192.168.222.146', 'localhost', '127.0.0.1', '*', 'localhost:3000']
+
 
 
 # Application definition
@@ -44,9 +70,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_beat',
     'cards',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

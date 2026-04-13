@@ -5,6 +5,11 @@ class Command(BaseCommand):
     help = "Dastlabki xatolik kodlarini Error modeliga yuklash"
 
     def handle(self, *args, **kwargs):
+        """
+        Error kodlari ro'yxatini baza ichidagi Error modeliga yuklaydi.
+
+        Yangi kodlar yaratadi yoki mavjudlarini yangilaydi.
+        """
         # Ro'yxat ko'rinishidagi xatoliklar (List of Dictionaries)
         ERROR_CODES_DATA = [
             {

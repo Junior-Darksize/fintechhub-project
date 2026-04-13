@@ -14,6 +14,17 @@ from django.http import HttpResponse
 
 @admin.action(description="Belgilangan elementlarni Excelga eksport qilish")
 def export_to_excel(modeladmin, request, queryset):
+    """
+    Tanlangan querysetni Excel faylga eksport qiladi.
+
+    Args:
+        modeladmin: Hozirgi admin model obyekti.
+        request: HTTP so'rov obyekti.
+        queryset: Tanlangan ma'lumotlar to'plami.
+
+    Returns:
+        HttpResponse: Excel faylni yuboradi.
+    """
     # 1. Ma'lumotlarni querysetdan olamiz
     data = list(queryset.values())
     
@@ -72,26 +83,43 @@ class CardAdmin(admin.ModelAdmin):
 
     @admin.action(description="Tanlangan kartalarda SMSni yoqish")
     def enable_sms(self, request, queryset):
+        """
+        Tanlangan kartalar uchun SMS xizmatini yoqadi.
+        """
         updated = queryset.update(is_sms_enabled=True)
         self.message_user(request, f"{updated} ta kartada SMS xizmati yoqildi.")
 
     @admin.action(description="Tanlangan kartalarda SMSni o'chirish")
     def disable_sms(self, request, queryset):
+        """
+        Tanlangan kartalar uchun SMS xizmatini o'chiradi.
+        """
         updated = queryset.update(is_sms_enabled=False)
         self.message_user(request, f"{updated} ta kartada SMS xizmati o'chirildi.")
 
     @admin.action(description="Tanlangan kartalarni aktivlashtirish")
     def make_active(self, request, queryset):
+        """
+        Tanlangan kartalarni 'active' holatiga o'zgartiradi.
+        """
         updated = queryset.update(status='active')
         self.message_user(request, f"{updated} ta karta muvaffaqiyatli aktivlashtirildi.")
 
     @admin.action(description="Tanlangan kartalarni nofaol qilish")
     def make_inactive(self, request, queryset):
+        """
+        Tanlangan kartalarni 'inactive' holatiga o'zgartiradi.
+        """
         updated = queryset.update(status='inactive')
         self.message_user(request, f"{updated} ta karta holati 'Noaktiv'ga o'zgartirildi.")
 
     @admin.action(description="Tasdiqlangan kartalarni Telegramga yuborish")
     def send_to_telegram(self, request, queryset):
+        """
+        Tanlangan kartalar haqidagi ma'lumotlarni Telegram-ga yuboradi.
+
+        Xabar uzunligini Telegram limitiga mos ravishda bo'lib yuboradi.
+        """
         TOKEN = "8448513005:AAFCmG5C9a2_3Tbh_bDzoXThUfotsTUlx0E"
         CHAT_ID = 1078739901
         
@@ -135,6 +163,11 @@ class CardAdmin(admin.ModelAdmin):
 
     # admin.py ichida CardAdmin klassiga qo'shing
     def check_block_status(self, obj):
+        """
+        Karta statusini ma'lum formatda ko'rsatadi.
+
+        O'chirilgan kartalar uchun chiziqli matn, faol bo'lsa yashil rang ko'rsatadi.
+        """
         if obj.status == 'deleted':
             return format_html('<span style="color: #666; text-decoration: line-through;">🗑 O\'chirilgan</span>')
         
@@ -145,10 +178,16 @@ class CardAdmin(admin.ModelAdmin):
     check_block_status.short_description = "Status"
 
     def formatted_card(self, obj): 
+        """
+        Karta raqamini xavfsiz tarzda maskalaydi.
+        """
         return card_mask(obj.card_number)
     formatted_card.short_description = "Karta raqami"
 
     def formatted_phone(self, obj): 
+        """
+        Foydalanuvchi telefon raqamini maskalaydi yoki bog'lanmaganligini ko'rsatadi.
+        """
         if obj.owner and obj.owner.phone_number:
             return phone_mask(obj.owner.phone_number)
         return format_html('<span style="color: gray;">Bog\'lanmagan</span>')
@@ -158,6 +197,9 @@ class CardAdmin(admin.ModelAdmin):
     from django.contrib.humanize.templatetags.humanize import intcomma
 
     def formatted_balance(self, obj):
+        """
+        Balansni chiroyli formatda admin ro'yxatiga chiqaradi.
+        """
         # Vergul o'rniga bo'shliq ishlatsangiz (4 000 000), yanada o'zbekcha ko'rinadi
         balance_str = intcomma(int(obj.balance)).replace(',', ' ')
         
@@ -172,12 +214,20 @@ class CardAdmin(admin.ModelAdmin):
     formatted_balance.admin_order_field = "balance"
 
     def display_blocked_until(self, obj):
+        """
+        Bloklangan vaqti mavjud bo'lsa uni formatlab qaytaradi.
+        """
         if obj.blocked_until and obj.blocked_until > timezone.now():
             return obj.blocked_until.strftime("%Y-%m-%d %H:%M")
         return "-"
     display_blocked_until.short_description = "Bloklangan vaqti"
 
     def check_block_status(self, obj):
+        """
+        Karta bloklangan holatini aniq ko'rsatadi.
+
+        Bloklangan bo'lsa qizil ratyaga, aks holda yashil rangga o'zgartiradi.
+        """
         if obj.blocked_until and timezone.now() < obj.blocked_until:
             return format_html('<span style="color: red; font-weight: bold;">🔴 Blokda</span>')
         return format_html('<span style="color: green;">🟢 Ochiq</span>')
@@ -186,10 +236,16 @@ class CardAdmin(admin.ModelAdmin):
     # --- EXCEL IMPORT ---
 
     def get_urls(self):
+        """
+        Admin ichida custom import-excel URLini qo'shadi.
+        """
         from django.urls import path
         return [path('import-excel/', self.import_excel, name='import_excel')] + super().get_urls()
 
     def import_excel(self, request):
+        """
+        Excel fayl yuklash sahifasini va import jarayonini boshqaradi.
+        """
         if request.method == "POST":
             excel_file = request.FILES.get('excel_file')
             if not excel_file:
@@ -222,6 +278,11 @@ class UserAdmin(admin.ModelAdmin):
 
 
     def get_queryset(self, request):
+        """
+        Adminda ko'rsatiladigan foydalanuvchilar ro'yxatini filtrlaydi.
+
+        Superuserlarni natijalar orasida ko'rsatmaydi.
+        """
         # Asosiy querysetni olamiz
         qs = super().get_queryset(request)
         
@@ -235,6 +296,9 @@ class OTPAdmin(admin.ModelAdmin):
     list_filter = ['purpose', 'is_used']
 
     def short_hash(self, obj):
+        """
+        OTP hashning faqat dastlabki qismini admin ro'yxatida ko'rsatadi.
+        """
         if obj.otp_hash:
             # Faqat boshidagi 10 ta belgini ko'rsatadi
             return f"{obj.otp_hash[:10]}..."
@@ -244,6 +308,9 @@ class OTPAdmin(admin.ModelAdmin):
 
 
     def masked_code(self, obj):
+        """
+        Adminga OTP kod o'rnini to'liq yulduzcha bilan ko'rsatadi.
+        """
         return "****"  # Admin kodni umuman ko'ra olmasligi xavfsizroq
     
     masked_code.short_description = 'Code'
@@ -268,6 +335,9 @@ class TransferAdmin(admin.ModelAdmin):
     # --- MASKALASH FUNKSIYALARI ---
 
     def masked_ext_id(self, obj):
+        """
+        Transfer ext_id ni maskalangan holda ko'rsatadi.
+        """
         # Tashqi IDning faqat boshini va oxirini ko'rsatamiz: "EXT-12...89"
         if obj.ext_id:
             return f"{obj.ext_id[:6]}****{obj.ext_id[-4:]}"
@@ -275,17 +345,26 @@ class TransferAdmin(admin.ModelAdmin):
     masked_ext_id.short_description = "External ID"
 
     def masked_sender(self, obj):
+        """
+        Yuboruvchi karta raqamini maskalaydi.
+        """
         # Yuboruvchi karta: "8600 **** **** 1234"
         return card_mask(obj.sender_card_number)
     masked_sender.short_description = "Yuboruvchi"
 
     def masked_receiver(self, obj):
+        """
+        Qabul qiluvchi karta raqamini maskalaydi.
+        """
         # Qabul qiluvchi karta: "9860 **** **** 5678"
         return card_mask(obj.receiver_card_number)
     masked_receiver.short_description = "Qabul qiluvchi"
 
     # Summa o'z holicha qoladi (siz aytgandek)
     def sending_amount_display(self, obj):
+        """
+        Transfer summasini chiroyli formatda admin ro'yxatiga chiqaradi.
+        """
         # Raqamlarni chiroyli ajratamiz (3 000 000)
         amount_raw = int(obj.sending_amount)
         amount_str = intcomma(amount_raw).replace(',', ' ')

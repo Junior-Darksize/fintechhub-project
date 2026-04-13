@@ -1,0 +1,406 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="ac4dPCdozs3NB6-vfGrq">
+    <mxGraphModel dx="3921" dy="1789" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-1" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;5,1,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;5,1,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;5,1,3,0&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;User started a money transfer.&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="130" width="180" x="-220" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-26" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="325" y="170" />
+              <mxPoint x="130" y="170" />
+              <mxPoint x="130" y="130" />
+            </Array>
+            <mxPoint x="130" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-2" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Is the card number correct?&lt;br&gt;Are sender and receiver cards not blocked?&lt;/font&gt;" vertex="1">
+          <mxGeometry height="130" width="130" x="260" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-29" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="dy5lqZmxNIC-zq1QWlUD-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;font&gt;Amount&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="90" x="460" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-47" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.458;entryY=0.998;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="665" y="170" />
+              <mxPoint x="501" y="170" />
+            </Array>
+            <mxPoint x="630" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-5" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;font&gt;Is the balance sufficient?&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="110" x="610" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create a new transaction in the database.&lt;/font&gt;" vertex="1">
+          <mxGeometry height="110" width="120" x="790" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;&quot; data-path-to-node=&quot;5,7,2,0&quot;&gt;&lt;code style=&quot;&quot; data-index-in-node=&quot;0&quot; data-path-to-node=&quot;5,7,2,0&quot;&gt;&amp;nbsp;&lt;/code&gt;&lt;/span&gt;&lt;span style=&quot;&quot; data-path-to-node=&quot;5,7,3,0&quot;&gt;Generate a 6-digit code and save its hash.&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="120" x="1010" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-9" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;span data-path-to-node=&quot;5,8,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;5,8,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;5,8,3,0&quot;&gt;&lt;font&gt;OTP kodini sms orqali yuborish.&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="90" width="160" x="1250" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-10" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;span data-path-to-node=&quot;9,1,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;9,1,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;9,1,3,0&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;Foydalanuvchi telefondagi&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;9,1,3,0&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;kodni kiritadi.&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="101" width="150" x="1500" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-36" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-41" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="dy5lqZmxNIC-zq1QWlUD-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-11" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;font style=&quot;&quot;&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;Kod to&#39;g&#39;rimi va 120 soniya o&#39;tib ketmadimi?&lt;/font&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="150" width="150" x="1740" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-12" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Qayta kod yuborish." vertex="1">
+          <mxGeometry height="90" width="190" x="1720" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-44" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-13" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Kodni qayta kiritish" vertex="1">
+          <mxGeometry height="100" width="180" x="1680" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-39" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-14" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Kod to&#39;g&#39;rimi va 120 soniya o&#39;tib ketmadimi?&lt;/font&gt;" vertex="1">
+          <mxGeometry height="130" width="150" x="2040" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Pulni yuborish&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="145" x="2040" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Keshdi ma&#39;lumotni o&#39;chirish&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="130" x="2350" y="17" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-18" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Muvaffaqiyatli chekni ko&#39;rsatish.&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="200" x="2610" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-21" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Qabul qiluvchini karta&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;nomerini terish&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="96" width="180" x="40" y="37" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-24" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.033;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-25" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.091;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-28" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.642;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-31" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.011;entryY=0.453;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-32" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.544;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-33" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.1;entryY=0.458;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-34" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.1;entryY=0.444;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-35" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.46;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-37" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.59;entryY=-0.028;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-40" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.493;entryY=1.042;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-42" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.026;entryY=0.558;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-49" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;6,1,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,1,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;6,1,3,0&quot;&gt;Qabul qiluvchi QR yaratadi&lt;/span&gt;" vertex="1">
+          <mxGeometry height="130" width="210" x="-250" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-54" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;span data-path-to-node=&quot;6,2,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,2,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;6,2,3,0&quot;&gt;Ma&#39;lumotlarni shifrlash va Base64 ga o‘tkazish.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="130" width="140" x="80" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-51" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.423;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-56" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="524.6666666666667" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-52" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;span data-path-to-node=&quot;6,3,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,3,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;6,3,3,0&quot;&gt;Yuboruvchi skaner qiladi va&lt;/span&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;6,3,3,0&quot;&gt;&amp;nbsp;xeshni yuboradi.&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="200" x="310" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-64" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.438;entryY=1.023;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-49">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="668" y="698" />
+              <mxPoint x="-158" y="698" />
+            </Array>
+            <mxPoint x="640" y="811.6666666666666" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-55" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="QR-kod muddati o‘tmaganmi?" vertex="1">
+          <mxGeometry height="115" width="115" x="610" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-61" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-59">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-57" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,6,3,0&quot;&gt;get_live_exchange_rate&lt;/code&gt; orqali UZSga hisoblash." vertex="1">
+          <mxGeometry height="125" width="160" x="810" y="452.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-58" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.597;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-63" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-59" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="&lt;span data-path-to-node=&quot;6,7,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,7,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;6,7,3,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;6,7,3,0&quot;&gt;select_for_update&lt;/code&gt; bilan pul o‘tkazish.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="140" x="1100" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-62" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="Chek" vertex="1">
+          <mxGeometry height="90" width="140" x="1370" y="472.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-65" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;4,1,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;4,1,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;4,1,3,0&quot;&gt;Foydalanuvchi karta raqamini kiritdi.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="180" x="-230" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-71" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.391;entryY=1.03;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-65">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="1030" />
+              <mxPoint x="-160" y="1030" />
+            </Array>
+            <mxPoint x="70" y="1060.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-122" connectable="0" parent="dy5lqZmxNIC-zq1QWlUD-71" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NO" vertex="1">
+          <mxGeometry relative="1" x="-0.2566" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-67" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;4,2,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;4,2,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;4,2,3,0&quot;&gt;Bazada bunday karta va telefon bormi?&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="160" x="30" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-69" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-70" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.029;entryY=0.504;entryDx=0;entryDy=0;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285.3599999999997" y="930.56" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-75" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-74">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-73" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="SHA-256 xesh yaratish va bazaga saqlash." vertex="1">
+          <mxGeometry height="110" width="160" x="290" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-78" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="dy5lqZmxNIC-zq1QWlUD-77">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-74" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Tasdiqlash kodini yuborish." vertex="1">
+          <mxGeometry height="90" width="190" x="535" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-77" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;span data-path-to-node=&quot;4,7,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;4,7,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;4,7,3,0&quot;&gt;Foydalanuvchi kodni kiritadi&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="820" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-80" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1225" y="1038" />
+              <mxPoint x="610" y="1038" />
+            </Array>
+            <mxPoint x="610" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-83" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1399.9999999999995" y="932.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-79" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="Togri kodmi?" vertex="1">
+          <mxGeometry height="125" width="150" x="1150" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-81" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-85" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-84">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-82" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="Kartani profilga muvaffaqiyatli bog&#39;lash" vertex="1">
+          <mxGeometry height="105" width="160" x="1410" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-84" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="Balans va karta ma&#39;lumotlarini qaytarish." vertex="1">
+          <mxGeometry height="95" width="190" x="1740" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-88" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="1279.6666666666667" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-86" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="Foydalanuvchi kartani bloklashni so&#39;radi." vertex="1">
+          <mxGeometry height="100" width="160" x="-225" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-91" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="115" y="1391" />
+              <mxPoint x="-160" y="1391" />
+            </Array>
+            <mxPoint x="-160" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-92" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-90">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="1290.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-87" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="Karta bazada bormi va holati &#39;active&#39;mi?" vertex="1">
+          <mxGeometry height="125" width="150" x="40" y="1217.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-94" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dy5lqZmxNIC-zq1QWlUD-93">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-90" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="SHA-256 xesh yaratish va bazaga saqlash." vertex="1">
+          <mxGeometry height="110" width="140" x="310" y="1225" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-93" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="&lt;span data-path-to-node=&quot;5,5,3,0&quot;&gt;Kodni foydalanuvchiga&lt;/span&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;5,5,3,0&quot;&gt;&amp;nbsp;yuborish.&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="190" x="600" y="1235" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-98" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-95" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="dy5lqZmxNIC-zq1QWlUD-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-95" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Foydalanuvchi kodni&lt;div&gt;&amp;nbsp;kiritishi&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="170" x="910" y="1240" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-96" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.125;entryY=0.406;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-99" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1288" y="1410" />
+              <mxPoint x="370" y="1410" />
+            </Array>
+            <mxPoint x="370" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-101" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1469.9999999999995" y="1289.6666666666667" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-97" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="Kod tog&#39;rimi" vertex="1">
+          <mxGeometry height="120" width="135" x="1220" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-100" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="Kartaning asosiy holatini o&#39;zgartirish." vertex="1">
+          <mxGeometry height="113" width="120" x="1480" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-102" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="Foydalanuvchiga bloklangani haqida javob." vertex="1">
+          <mxGeometry height="100" width="180" x="1750" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-103" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-100" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-102">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-104" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;5,1,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;5,1,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;5,1,3,0&quot;&gt;Ism, Familiya va Tel kiritildi&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="170" x="-240" y="1580" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-107" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.453;entryY=1.035;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-104">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="1733" />
+              <mxPoint x="-163" y="1733" />
+            </Array>
+            <mxPoint x="70" y="1760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-105" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;5,2,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;5,2,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;5,2,3,0&quot;&gt;Bazada bunday foydalanuvchi bormi?&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="150" x="35" y="1565" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-106" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-112" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="dy5lqZmxNIC-zq1QWlUD-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-108" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="SHA-256 xesh yaratish va bazaga saqlash." vertex="1">
+          <mxGeometry height="115" width="140" x="310" y="1575" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-109" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.565;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-108">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-114" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-110" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="dy5lqZmxNIC-zq1QWlUD-113">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-110" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Kodni sms orqali yuborish" vertex="1">
+          <mxGeometry height="95" width="200" x="595" y="1580" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-113" parent="1" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" value="Foydalanuvchi kodni&lt;div&gt;&amp;nbsp;kiritadi&lt;/div&gt;" vertex="1">
+          <mxGeometry height="92" width="180" x="890" y="1586.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-118" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-115" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="dy5lqZmxNIC-zq1QWlUD-117">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-121" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-115" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1270" y="1771" />
+              <mxPoint x="360" y="1771" />
+            </Array>
+            <mxPoint x="360" y="1700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-115" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="Kod tog&#39;rimi" vertex="1">
+          <mxGeometry height="130" width="140" x="1200" y="1562.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-116" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-113" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-115">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-117" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" value="Tizimga kirish" vertex="1">
+          <mxGeometry height="117" width="130" x="1480" y="1580" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-119" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" value="&lt;span data-path-to-node=&quot;9,6,2,0&quot;&gt;&lt;code data-index-in-node=&quot;0&quot; data-path-to-node=&quot;9,6,2,0&quot;&gt;&lt;/code&gt;&lt;/span&gt;&lt;span data-path-to-node=&quot;9,6,3,0&quot;&gt;Foydalanuvchi ma&#39;lumotlarini qaytarish.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="150" x="1720" y="1580" as="geometry" />
+        </mxCell>
+        <mxCell id="dy5lqZmxNIC-zq1QWlUD-120" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-117" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.014;entryY=0.588;entryDx=0;entryDy=0;entryPerimeter=0;" target="dy5lqZmxNIC-zq1QWlUD-119">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+          <!-- Universal Error Block -->
+          <mxCell id="universal-error" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;fillColor=#ffcccc;" value="Xatolik (Error)" vertex="1">
+            <mxGeometry height="80" width="160" x="2000" y="600" as="geometry" />
+          </mxCell>
+          <!-- Universal Cancel Block -->
+          <mxCell id="universal-cancel" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;fillColor=#fff2cc;" value="Bekor qilish (Cancel)" vertex="1">
+            <mxGeometry height="80" width="180" x="2200" y="800" as="geometry" />
+          </mxCell>
+          <!-- Example error/cancel edges for main OTP/transfer/QR flows -->
+          <mxCell id="edge-error-otp" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-14" target="universal-error" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#ff0000;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge-cancel-otp" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-14" target="universal-cancel" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#b8860b;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge-error-qr" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-55" target="universal-error" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#ff0000;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge-cancel-qr" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-55" target="universal-cancel" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#b8860b;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge-error-cardblock" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-87" target="universal-error" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#ff0000;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge-cancel-cardblock" edge="1" parent="1" source="dy5lqZmxNIC-zq1QWlUD-87" target="universal-cancel" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#b8860b;dashed=1;">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+  </diagram>
+</mxfile>

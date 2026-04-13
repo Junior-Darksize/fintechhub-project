@@ -5,13 +5,14 @@ from celery import shared_task
 from django.utils import timezone
 from django.db.models import Sum
 from .models import Card, Transfer
+import os
 
 # Logger sozlamalari
 logger = logging.getLogger('fintech_audit')
 
 # Telegram sozlamalari
-TG_TOKEN = "8448513005:AAFCmG5C9a2_3Tbh_bDzoXThUfotsTUlx0E"
-TG_CHAT_ID = 1078739901
+TG_TOKEN = os.getenv("TG_TOKEN")
+TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
 @shared_task
 def send_telegram_report():

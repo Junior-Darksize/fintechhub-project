@@ -2,13 +2,20 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from .models import Card
 from .utils import card_mask, send_telegram_message
+import os
 
-TOKEN = "8448513005:AAFCmG5C9a2_3Tbh_bDzoXThUfotsTUlx0E"
-CHAT_ID = 1078739901
+
+TOKEN = os.getenv("TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 # 1. SAQLASHDAN OLDIN: Eski ma'lumotlarni capture qilamiz
 @receiver(pre_save, sender=Card)
 def capture_old_values(sender, instance, **kwargs):
+    """
+    Card saqlanishidan oldin uning eski balans va SMS statusini saqlaydi.
+
+    Bu keyinchalik `post_save` signalida o'zgargan qiymatlarni aniqlash uchun kerak.
+    """
     if instance.pk:
         try:
             old_obj = Card.objects.get(pk=instance.pk)
@@ -21,6 +28,11 @@ def capture_old_values(sender, instance, **kwargs):
 # 2. SAQLAGANDAN KEYIN: Tilga qarab xabar yuboramiz
 @receiver(post_save, sender=Card)
 def card_change_notification(sender, instance, created, **kwargs):
+    """
+    Kartada o'zgarish bo'lganda foydalanuvchiga Telegram orqali xabar yuboradi.
+
+    Yangi karta qo'shilganda yoki balans o'zgarganda tilga mos xabar tanlaydi.
+    """
     # Foydalanuvchi va uning tilini aniqlash
     user = instance.owner
     if not user:

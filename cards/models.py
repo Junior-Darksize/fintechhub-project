@@ -6,14 +6,19 @@ from django.core.validators import RegexValidator, MinValueValidator, MaxValueVa
 from django.utils import timezone
 from .utils import card_mask
 from django.contrib.auth.hashers import make_password, check_password
+import uuid
 
 
 class User(AbstractUser):
+    """
+    Foydalanuvchi modeli. Asosiy foydalanuvchi ma'lumotlari va autentifikatsiya uchun ishlatiladi.
+    """
     first_name = models.CharField(max_length=150, verbose_name="Ism")
     last_name = models.CharField(max_length=150, verbose_name="Familiya")
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     lang = models.CharField(max_length=2, default='uz', choices=[('uz', 'Uzbek'), ('ru', 'Russian'), ('en', 'English')])
     blocked_until = models.DateTimeField(null=True, blank=True, verbose_name="Bloklangan vaqti")
+    secret_key = models.CharField(max_length=255, unique=True, default=uuid.uuid4, editable=False)
 
     # Migratsiya xatosini yechish uchun related_name qo'shamiz
     groups = models.ManyToManyField(
@@ -30,16 +35,30 @@ class User(AbstractUser):
     )
 
     def get_full_name(self):
+        """
+        Foydalanuvchining to'liq ismini (ism va familiya) qaytaradi.
+
+        Returns:
+            str: Foydalanuvchining to'liq ismi (ism va familiya).
+        """
         return f"{self.first_name} {self.last_name}".strip()
 
     def __str__(self):
-        # Agar ism-familiya bo'lmasa, username qaytaradi
+        """
+        Foydalanuvchini string ko'rinishida qaytaradi (ism familiya yoki username).
+
+        Returns:
+            str: To'liq ism yoki username.
+        """
         full_name = self.get_full_name()
         return full_name if full_name else self.username
 
 
 
 class Card(models.Model):
+    """
+    Bank kartasi modeli. Foydalanuvchiga tegishli karta va uning atributlari.
+    """
     # models.py ichida
     STATUS_CHOICES = [
         ('active', 'Active'),
@@ -61,15 +80,30 @@ class Card(models.Model):
     try_count = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
+        """
+        Kartani string ko'rinishida qaytaradi (maskalangan raqam va egasi).
+
+        Returns:
+            str: Maskalangan karta raqami va egasi.
+        """
         owner_name = self.owner.get_full_name() if self.owner else "Egasiz"
         return f"{card_mask(self.card_number)} - {owner_name}"
     
     def is_blocked(self):
+        """
+        Karta hozir bloklanganmi (blocked_until vaqti kelmagan bo'lsa True).
+
+        Returns:
+            bool: True agar karta bloklangan bo'lsa, aks holda False.
+        """
         return self.blocked_until and timezone.now() < self.blocked_until
 
 
 
 class Transfer(models.Model):
+    """
+    Pul o'tkazmalari (transfer) modeli. Karta raqamlar, miqdor, holat va OTP.
+    """
     class State(models.TextChoices):
         CREATED = 'created', 'Created'
         CONFIRMED = 'confirmed', 'Confirmed'
@@ -98,21 +132,46 @@ class Transfer(models.Model):
 
 
     def set_otp(self, raw_otp):
-        """OTP kodini hashlab saqlaydi"""
+        """
+        OTP kodini hashlab saqlaydi (parol sifatida saqlanadi).
+
+        Args:
+            raw_otp (str): Ochiq OTP kodi.
+        """
         self.otp = make_password(raw_otp)
         self.save()
 
     def verify_otp(self, raw_otp):
-        """Kiritilgan kodni bazadagi hash bilan solishtiradi"""
+        """
+        Kiritilgan kodni bazadagi hash bilan solishtiradi.
+
+        Args:
+            raw_otp (str): Foydalanuvchi kiritgan kod.
+        Returns:
+            bool: True agar kod to'g'ri bo'lsa, aks holda False.
+        """
         if not self.otp:
             return False
         return check_password(raw_otp, self.otp)
 
     def __str__(self):
+        """
+        Transfer obyektini string ko'rinishida qaytaradi (ID va status).
+
+        Returns:
+            str: Transfer ID va status.
+        """
         return f"Transfer {self.ext_id} - {self.state}"
     
 
     def save(self, *args, **kwargs):
+        """
+        Transferni saqlashda receiving_amount va confirmed_at maydonlarini avtomatik to'ldiradi.
+
+        Args:
+            *args: Qo'shimcha argumentlar.
+            **kwargs: Qo'shimcha kalitli argumentlar.
+        """
         if not self.receiving_amount:
             rates = {'643': Decimal('140.00'), '840': Decimal('12500.00'), '860': Decimal('1.00')}
             self.receiving_amount = self.sending_amount * rates.get(self.currency, Decimal('1.00'))
@@ -124,6 +183,9 @@ class Transfer(models.Model):
 
 
 class OTP(models.Model):
+    """
+    OTP (bir martalik parol) modeli. Foydalanuvchi, karta, transfer va maqsad uchun.
+    """
     class Purpose(models.TextChoices):
         LOGIN = "User Login", "User Login"
         TRANSFER = "Money Transfer", "Money Transfer"
@@ -147,6 +209,11 @@ class OTP(models.Model):
         """
         Kiritilgan ochiq kodni (input_otp) SHA-256 orqali xeshlab,
         bazadagi otp_hash bilan solishtiradi.
+
+        Args:
+            input_otp (str): Foydalanuvchi kiritgan kod.
+        Returns:
+            bool: True agar kod to'g'ri va amal qilsa, aks holda False.
         """
         # 1. Asosiy tekshiruvlar (Ishlatilganmi, Vaqti o'tganmi, Urinishlar tugaganmi)
         if self.is_used:
@@ -173,20 +240,42 @@ class OTP(models.Model):
         return False
 
     def __str__(self):
+        """
+        OTP obyektini string ko'rinishida qaytaradi (foydalanuvchi, maqsad, vaqt).
+
+        Returns:
+            str: Foydalanuvchi, maqsad va vaqt.
+        """
         owner = self.user.get_full_name() if self.user else "Noma'lum"
         return f"{owner} - {self.purpose} ({self.created_at})"
     
     
-
 class Error(models.Model):
+    """
+    Xatoliklar kodi va ko'p tilli xabarlar modeli.
+    """
     code = models.IntegerField(unique=True, primary_key=True)
     en = models.CharField(max_length=255)
     ru = models.CharField(max_length=255)
     uz = models.CharField(max_length=255)
 
     def __str__(self):
+        """
+        Error obyektini string ko'rinishida qaytaradi (kod va uzbekcha xabar).
+
+        Returns:
+            str: Xatolik kodi va uzbekcha xabar.
+        """
         return f"{self.code}: {self.uz}"
     
     def get_message(self, lang='uz'):
+        """
+        Berilgan til bo'yicha xatolik xabarini qaytaradi (agar yo'q bo'lsa, uzbekcha).
+
+        Args:
+            lang (str): Til kodi ('uz', 'ru', 'en').
+        Returns:
+            str: Xatolik xabari.
+        """
         return getattr(self, lang, self.uz)
     
